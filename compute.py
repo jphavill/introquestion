@@ -1,0 +1,50 @@
+import sys
+
+
+def main():
+    """
+    Takes in two numerical commandline arguments, threshold and limit, and an unknown number
+    of numerical inputs through standard input separated by newlines.
+
+    For each line of standard input two computations are made:
+    1. the maximum of 0 and the input - threshold
+    2. the minimum of the above computation and the limit - the cumulative total
+
+    The result is then added to the cumulative total and printed on its own line.
+
+    Finally the cumulative total is printed after all lines of standard input are read in.
+    """
+
+    # error checking -------------------
+    if not len(sys.argv) == 3:
+        raise TypeError(f"Incorrect number of arguments (expected 3 (name + two numerical values) but received "
+                        f"{len(sys.argv)}) ")
+
+    try:
+        # unpacks all arguments as floats, ignoring the first argument which is the filename
+        threshold, limit = [float(i) for i in sys.argv[1:]]
+    except ValueError:
+        raise ValueError("Arguments threshold and limit must be numerical values")
+
+    if not (0 <= threshold <= 1000000000):
+        raise ValueError("Threshold must be between 0.0 and 1,000,000,000.0 (inclusive)")
+    if not (0 <= limit <= 1000000000):
+        raise ValueError("Limit must be between 0.0 and 1,000,000,000.0 (inclusive)")
+
+    # main program ---------------------
+    cumulative = 0
+    for line in sys.stdin:
+        # the result of applying the threshold
+        num_thresholded = max(0, float(line) - threshold)
+        # the result of applying the limit
+        num_limited = min(num_thresholded, limit - cumulative)
+        cumulative += num_limited
+        print(num_limited)
+    print(cumulative)
+
+
+
+if __name__ == '__main__':
+    main()
+
+
